@@ -31,7 +31,7 @@
                                 @endif
                             </div>
 
-                            <div class="glossary-description mt-4 text-base text-gray-700 lg:text-lg">{!! (new Parsedown)->text($term->getTranslation('description', locale())) !!}</div>
+                            <div class="mt-4 text-base text-gray-700 glossary-description lg:text-lg">{!! (new Parsedown)->text($term->getTranslation('description', locale())) !!}</div>
 
                             @if ($term->resourcesForCurrentSession->count() > 0)
                                 <div class="flex flex-col mt-4">
@@ -78,13 +78,13 @@
                     @endforelse
                 </ul>
 
-                <div class="w-full pb-3 mb-4 border-b md:mt-10 md:w-1/4 border-grey-100 md:border-none">
+                <div class="sticky top-0 w-full pb-3 mb-4 border-b md:mt-10 md:w-1/4 border-grey-100 md:border-none">
                     <h3 class="text-lg font-semibold">{{ __('Table of contents') }}</h3>
                     <toggle-when-mobile class="mt-5 mb-3">
                         <ul class="mt-6">
                             @forelse ($terms as $term)
                                 <li class="block leading-relaxed list-none border-b border-gray-200 last:border-0 md:text-base">
-                                    <a class="block py-3 px-3 capitalize transition-colors duration-150 ease-in-out hover:no-underline hover:bg-gray-100" href="#{{ $term->getEnglishName() }}">{{ $term->name }}</a>
+                                    <a class="block px-3 py-3 capitalize transition-colors duration-150 ease-in-out hover:no-underline hover:bg-gray-100" href="#{{ $term->getEnglishName() }}">{{ $term->name }}</a>
                                 </li>
                             @empty
                                 {{ __('No terms') }}

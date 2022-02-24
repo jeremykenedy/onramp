@@ -4,18 +4,18 @@
 $level = ! $module->is_bonus ? $module->skill_level : 'bonus';
 
 switch($level) {
-    case 'intermediate':
-        $bgColor = 'bg-blue-violet';
-        break;
-    case 'advanced':
-        $bgColor = 'bg-pink-800';
-        break;
-    case 'bonus':
-        $bgColor = 'bg-oxford-blue';
-        break;
-    default:
-        $bgColor = 'bg-teal-700';
-        break;
+case 'intermediate':
+$bgColor = 'bg-blue-violet';
+break;
+case 'advanced':
+$bgColor = 'bg-pink-800';
+break;
+case 'bonus':
+$bgColor = 'bg-oxford-blue';
+break;
+default:
+$bgColor = 'bg-teal-700';
+break;
 }
 @endphp
 
@@ -28,79 +28,78 @@ switch($level) {
             <h1 class="max-w-3xl text-white">{{ $module->name }}</h1>
 
             @auth
-                @if (Auth::user()->hasTrack() && Auth::user()->track->modules->contains($module->id))
-                    <completed-button
-                        :initial-is-completed="{{ $completedModules->contains($module->id) ? 'true' : 'false' }}"
-                        type="{{ $module->getMorphClass() }}"
-                        id="{{ $module->id }}">
-                    </completed-button>
-                @endif
+            @if (Auth::user()->hasTrack() && Auth::user()->track->modules->contains($module->id))
+            <completed-button :initial-is-completed="{{ $completedModules->contains($module->id) ? 'true' : 'false' }}" type="{{ $module->getMorphClass() }}" id="{{ $module->id }}">
+            </completed-button>
+            @endif
             @endauth
         </div>
     </div>
 
     <div class="pb-16 fluid-container">
         <div class="px-4 pt-6 pb-8 -mt-16 bg-white shadow-md md:p-10 md:pb-16 md:-mt-32">
+            @if ($module->length)
+            <modal :show="modals.estimatedTime">
+                <template>
+                    <div class="flex flex-col justify-between h-auto min-h-screen pt-12 overflow-scroll border-t-4 border-blue-violet">
+                        We estimate the time to complete each module by considering the <em>most important</em> resources in the module and estimating the average time to complete it. This isn't a guarantee, but just a guess.
+                    </div>
+                </template>
+            </modal>
+            <div class="float-right px-3 py-2 text-sm leading-tight bg-gray-200 rounded-md cursor-pointer" @click="openModal('estimatedTime')">
+                Est. time<br><span class="font-bold text-md">{{ $module->length }} hours</span>
+            </div>
+            @endif
             @if ($module->description)
-                <div>
-                    <p class="mb-3 text-xl font-semibold md:mb-8 md:text-2xl lg:text-4xl">{{ __('Overview') }}</p>
+            <div>
+                <p class="mb-3 text-xl font-semibold md:mb-8 md:text-2xl lg:text-4xl">{{ __('Overview') }}</p>
 
-                    <p class="pr-2 mb-6 text-east-bay md:mb-10 lg:max-w-3xl xl:leading-normal">
-                        {{ $module->description }}
-                    </p>
-                </div>
+                <p class="pr-2 mb-6 text-east-bay md:mb-10 lg:max-w-3xl xl:leading-normal">
+                    {{ $module->description }}
+                </p>
+            </div>
             @endif
 
             <div>
                 <p class="mb-3 text-xl font-semibold md:mb-8 md:text-2xl lg:text-4xl">{{ __('Skills') }}</p>
                 <ul class="flex flex-wrap -m-1 md:-m-2">
                     @forelse ($skills as $skill)
-                        @auth
-                            @if (Auth::user()->hasTrack() && Auth::user()->track->modules->contains($module->id))
-                                <li class="block m-1 md:m-2">
-                                    <completed-badge
-                                        badge-text="{{ $skill->name }}"
-                                        :initial-is-completed="{{ $completedSkills->contains($skill->id) ? 'true' : 'false' }}"
-                                        type="{{ $skill->getMorphClass() }}"
-                                        id="{{ $skill->id }}"
-                                    ></completed-badge>
-                                </li>
-                            @else
-                                <li class="relative block px-4 py-2 m-1">
-                                    <span class="absolute inset-0 w-full h-full bg-teal-400 rounded-md opacity-10"></span>
-                                    <span class="font-bold text-teal-700">{{ $skill->name }}</span>
-                                </li>
-                            @endif
-                        @endauth
-                        @guest
-                            <li class="relative block px-4 py-2 m-1">
-                                <span class="absolute inset-0 w-full h-full bg-teal-400 rounded-md opacity-10"></span>
-                                <span class="font-bold text-teal-700">{{ $skill->name }}</span>
-                            </li>
-                        @endguest
+                    @auth
+                    @if (Auth::user()->hasTrack() && Auth::user()->track->modules->contains($module->id))
+                    <li class="block m-1 md:m-2">
+                        <completed-badge badge-text="{{ $skill->name }}" :initial-is-completed="{{ $completedSkills->contains($skill->id) ? 'true' : 'false' }}" type="{{ $skill->getMorphClass() }}" id="{{ $skill->id }}"></completed-badge>
+                    </li>
+                    @else
+                    <li class="relative block px-4 py-2 m-1">
+                        <span class="absolute inset-0 w-full h-full bg-teal-400 rounded-md opacity-10"></span>
+                        <span class="font-bold text-teal-700">{{ $skill->name }}</span>
+                    </li>
+                    @endif
+                    @endauth
+                    @guest
+                    <li class="relative block px-4 py-2 m-1">
+                        <span class="absolute inset-0 w-full h-full bg-teal-400 rounded-md opacity-10"></span>
+                        <span class="font-bold text-teal-700">{{ $skill->name }}</span>
+                    </li>
+                    @endguest
                     @empty
-                        <li class="relative block m-1">{{ __('No skills') }}</li>
+                    <li class="relative block m-1">{{ __('No skills') }}</li>
                     @endforelse
 
                     @if ($bonusSkills->isNotEmpty())
-                        <li class="mt-4 font-bold list-none">BONUS:</li>
-                        @foreach ($bonusSkills as $skill)
-                            @if (Auth::check())
-                                <li class="block m-1 md:m-2">
-                                    <completed-badge
-                                        badge-text="{{ $skill->name }}"
-                                        :initial-is-completed="{{ $completedSkills->contains($skill->id) ? 'true' : 'false' }}"
-                                        type="{{ $skill->getMorphClass() }}"
-                                        id="{{ $skill->id }}"
-                                    ></completed-badge>
-                                </li>
-                            @else
-                                <li class="relative block px-4 py-2 m-1">
-                                    <span class="absolute inset-0 w-full h-full bg-teal-400 rounded-md opacity-10"></span>
-                                    <span class="font-bold text-teal-700">{{ $skill->name }}</span>
-                                </li>
-                            @endif
-                        @endforeach
+                    <li class="mt-4 font-bold list-none">BONUS:</li>
+                    @foreach ($bonusSkills as $skill)
+                    @if (Auth::check())
+                    <li class="block m-1 md:m-2">
+                        <completed-badge badge-text="{{ $skill->name }}" :initial-is-completed="{{ $completedSkills->contains($skill->id) ? 'true' : 'false' }}" type="{{ $skill->getMorphClass() }}" id="{{ $skill->id }}"></completed-badge>
+                    </li>
+                    @else
+                    <li class="relative block px-4 py-2 m-1">
+                        <span class="absolute inset-0 w-full h-full bg-teal-400 rounded-md opacity-10"></span>
+                        <span class="font-bold text-teal-700">{{ $skill->name }}</span>
+                    </li>
+                    @endif
+                    @endforeach
                     @endif
                 </ul>
             </div>
@@ -108,16 +107,10 @@ switch($level) {
     </div>
 
     <tabs>
-        <tab
-            @if ($resourceType === 'free-resources') :selected="true" @endif
-            name="{{ __('Free resources') }}"
-            url="{{ route_wlocale('modules.show', ['module' => $module, 'resourceType' => 'free-resources']) }}">
+        <tab @if ($resourceType==='free-resources' ) :selected="true" @endif name="{{ __('Free resources') }}" url="{{ route_wlocale('modules.show', ['module' => $module, 'resourceType' => 'free-resources']) }}">
         </tab>
 
-        <tab
-            @if ($resourceType === 'paid-resources') :selected="true" @endif
-            name="{{ __('Paid resources') }}"
-            url="{{ route_wlocale('modules.show', ['module' => $module, 'resourceType' => 'paid-resources']) }}">
+        <tab @if ($resourceType==='paid-resources' ) :selected="true" @endif name="{{ __('Paid resources') }}" url="{{ route_wlocale('modules.show', ['module' => $module, 'resourceType' => 'paid-resources']) }}">
         </tab>
 
         {{-- @todo Show this once we add in quizzes and exercises --}}
@@ -127,20 +120,13 @@ switch($level) {
             url="{{ route_wlocale('modules.show', ['module' => $module, 'resourceType' => 'quizzes']) }}">
         </tab>
 
-        <tab
-            @if ($resourceType === 'exercises') :selected="true" @endif
-            name="Exercises"
-            url="{{ route_wlocale('modules.show', ['module' => $module, 'resourceType' => 'exercises']) }}">
+        <tab @if ($resourceType==='exercises' ) :selected="true" @endif name="Exercises" url="{{ route_wlocale('modules.show', ['module' => $module, 'resourceType' => 'exercises']) }}">
         </tab> --}}
     </tabs>
 
     <div class="fluid-container">
 
-        <resource-language-preference-switcher
-            class="md:-mt-5 lg:-mt-8 xl:-mt-6"
-            language="{{ Localization::languageForLocale(locale()) }}"
-            initial-choice="{{ $currentResourceLanguagePreference }}"
-        >
+        <resource-language-preference-switcher class="md:-mt-5 lg:-mt-8 xl:-mt-6" language="{{ Localization::languageForLocale(locale()) }}" initial-choice="{{ $currentResourceLanguagePreference }}">
         </resource-language-preference-switcher>
 
         <div>
@@ -150,24 +136,24 @@ switch($level) {
             @endphp
 
             @switch($resourceType)
-                @case('free-resources')
-                    @include('modules.resources.free')
-                    @break
+            @case('free-resources')
+            @include('modules.resources.free')
+            @break
 
-                @case('paid-resources')
-                    @include('modules.resources.paid')
-                    @break
+            @case('paid-resources')
+            @include('modules.resources.paid')
+            @break
 
-                @case('quizzes')
-                    @include('modules.resources.quiz')
-                    @break
+            @case('quizzes')
+            @include('modules.resources.quiz')
+            @break
 
-                @case('exercises')
-                    @include('modules.resources.exercise')
-                    @break
+            @case('exercises')
+            @include('modules.resources.exercise')
+            @break
 
-                @default
-                    @include('modules.resources.free')
+            @default
+            @include('modules.resources.free')
             @endswitch
         </div>
     </div>

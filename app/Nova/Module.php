@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use MrMonat\Translatable\Translatable;
@@ -61,6 +62,9 @@ class Module extends BaseResource
                 ->options(EloquentModule::SKILL_LEVELS)
                 ->displayUsingLabels()
                 ->rules('required'),
+
+            Number::make('Length (in hours)', 'length')
+                ->sortable(),
 
             // @todo Replace this with correct permissions after chatting with David
             BelongsToMany::make('Tracks')

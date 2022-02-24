@@ -8,6 +8,7 @@ import MenuDropdownItem from './Menu/MenuDropdownItem.vue';
 import MenuDropdown from './Menu/MenuDropdown.vue';
 import Modal from './Modal.vue';
 import ModalMobileMenu from './ModalMobileMenu.vue';
+import EstimatedTimeModal from './EstimatedTimeModal.vue';
 import ModuleListing from './Modules/ModuleListing.vue';
 import ModuleCard from './Modules/ModuleCard.vue';
 import ResourceLanguagePreferenceSwitcher from './ResourceLanguagePreferenceSwitcher.vue';

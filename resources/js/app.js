@@ -45,6 +45,7 @@ const app = new Vue({
     data: {
         modals: {
             mobileMenu: false,
+            estimatedTime: false,
         },
     },
 

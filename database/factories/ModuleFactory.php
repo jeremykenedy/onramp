@@ -10,5 +10,6 @@ $factory->define(Module::class, function (Faker $faker) {
             return Str::slug($module['name']);
         },
         'is_bonus' => $faker->boolean(20),
+        'length' => $faker->numberBetween(30, 360),
     ];
 });
